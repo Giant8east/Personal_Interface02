@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,7 +20,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -38,8 +42,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.example.handcraft_composeui02.ui.theme.HandCraft_ComposeUI02Theme
 import com.example.handcraft_composeui02.ui.util.px
@@ -76,6 +82,10 @@ fun ProfileScreen() {
             UserDataRow()
 
             TaskCard()
+
+            WorkList()
+
+            AccountCard()
         }
     }
 }
@@ -322,5 +332,116 @@ fun GradientButton(
         contentAlignment = Alignment.Center
     ) {
         content()
+    }
+}
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun WorkList(){
+    val works = remember {
+        listOf(
+            R.mipmap.work_1,
+            R.mipmap.work_2,
+            R.mipmap.work_3,
+        )
+    }
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 60.px())
+            .padding(top = 54.px())
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(40.px()))
+            .background(Color.White)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(top = 32.px())
+                .padding(horizontal = 42.px())
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "往期作品",
+                fontSize = 42.textPx(),
+                fontWeight = FontWeight.Bold
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "全部",
+                    fontSize = 36.textPx(),
+                    color = Color(0xFFBCC7D0)
+                )
+                Icon(
+                    painter = painterResource(R.mipmap.icon_double_right),
+                    contentDescription = null,
+                    modifier = Modifier.size(36.px()),
+                    tint = Color(0xFFBCC7D0)
+                )
+            }
+        }
+        LazyRow(
+            modifier = Modifier
+                .padding(top = 24.px())
+                .padding(horizontal = 42.px())
+                .padding(bottom = 38.px())
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(50.px()),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            item {
+                Text(
+                    text = buildAnnotatedString {
+                        append("96")
+                        withStyle(
+                            style = SpanStyle(
+                                color = Color(0xFFBCC7D0),
+                                fontSize = 36.textPx(),
+                                baselineShift = BaselineShift(0.3f)
+                            )
+                        ){
+                            append(" 个")
+                        }
+                    },
+                    fontSize = 96.textPx(),
+                    color = Color(0xFF369FFF),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(end = 17.px())
+                )
+            }
+            items(works) { work ->
+                Image(
+                    painter = painterResource(work),
+                    contentDescription = null,
+                    modifier = Modifier.size(200.px())
+                )
+            }
+            item { Spacer(Modifier.width(42.px())) }
+        }
+    }
+}
+
+@Composable
+fun AccountCard() {
+    Column(
+        modifier = Modifier
+            .padding(top = 54.px())
+            .padding(horizontal = 60.px())
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(40.px()))
+            .background(Color.White)
+            .padding(horizontal = 42.px())
+            .padding(top = 31.px())
+            .padding(bottom = 76.px())
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) { }
     }
 }
