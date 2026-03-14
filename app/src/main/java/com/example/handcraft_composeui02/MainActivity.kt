@@ -1,5 +1,6 @@
 package com.example.handcraft_composeui02
 
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -41,6 +42,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
@@ -244,14 +246,16 @@ fun TaskCard(){
         Image(
             painter = painterResource(R.mipmap.card_bg),
             contentDescription = null,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.FillWidth // 卡片背景图尺寸偏小，要缩放
         )
         Image(
             painter = painterResource(R.mipmap.card_bg_1),
             contentDescription = null,
             modifier = Modifier
                 .padding(top = 185.px())
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth
         )
 
         Row(
@@ -425,8 +429,20 @@ fun WorkList(){
     }
 }
 
+data class Account(
+    val icon: Int,
+    val title: String,
+    val label: String
+)
+
 @Composable
 fun AccountCard() {
+    val accounts = remember {
+        listOf(
+            Account(R.mipmap.icon_coin, "353 金币","一键领取金币"),
+            Account(R.mipmap.icon_paper, "2 优惠券","有效期7天")
+        )
+    }
     Column(
         modifier = Modifier
             .padding(top = 54.px())
@@ -436,12 +452,77 @@ fun AccountCard() {
             .background(Color.White)
             .padding(horizontal = 42.px())
             .padding(top = 31.px())
-            .padding(bottom = 76.px())
+            .padding(bottom = 76.px()),
+        verticalArrangement = Arrangement.spacedBy(50.px())
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .padding(bottom = 10.px())
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        ) { }
+        ) {
+            Text(
+                text = "我的账户",
+                fontSize = 42.textPx(),
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF333333)
+            )
+            GradientButton(
+                modifier = Modifier
+                    .width(185.px())
+                    .height(80.px())
+                    .clip(CircleShape),
+                onClick = {}
+            ) {
+                Text(
+                    text = "充值",
+                    color = Color.White,
+                    fontSize = 36.textPx()
+                )
+            }
+        }
+        accounts.fastForEach { account ->
+            AccountItem(account)
+        }
+        Spacer(Modifier.height(76.px()))
+    }
+}
+
+@Composable
+fun AccountItem(account: Account){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(28.px())
+    ) {
+        Image(
+            painter = painterResource(account.icon),
+            contentDescription = null,
+            modifier = Modifier.size(84.px())
+        )
+        Text(
+            text = buildAnnotatedString {
+                val list = account.title.split(" ")
+                append(list.first())
+                withStyle(
+                    style = SpanStyle(
+                        fontSize = 32.textPx(),
+                        baselineShift = BaselineShift(0.2f)
+                    )
+                ){
+                    append(" ")
+                    append(list.last())
+                }
+            },
+            fontWeight = FontWeight.Bold,
+            fontSize = 46.textPx(),
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = account.label,
+            fontSize = 32.textPx(),
+            color = Color(0xFFBCC7D0)
+        )
     }
 }
